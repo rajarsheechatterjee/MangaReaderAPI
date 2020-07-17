@@ -9,9 +9,9 @@ const router = express.Router();
 // @access Public
 
 router.get('/:mangaName', (req, res) => {
-	const rootUrl = 'http://www.mangareader.net/';
+	const rootUrl = 'http://www.mangareader.net';
 	const mangaName = req.params.mangaName;
-	const url = rootUrl + mangaName;
+	const url = rootUrl + "/" + mangaName;
 
 	if(mangaName) {
 		
@@ -58,7 +58,7 @@ router.get('/:mangaName', (req, res) => {
 				"chapters": chapters
 			};
 
-			res.send(JSON.stringify(chapterResults));
+			res.json(chapterResults);
 		});
 	}
 });

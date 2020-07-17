@@ -15,10 +15,11 @@ router.get('/:mangaName/:chapterNo', (req, res) => {
 	const chapterUrl = mangaName + "/" + chapterNo;
 	const url = rootUrl + chapterUrl;
 
-	if (chapterUrl) {
-		let pages = [];
+	let pages = [];
 
-		request(url, function (err, response, body) {
+	if (chapterUrl) {
+
+		request(url, (err, response, body) => {
 
 			if (err) throw err;
 
@@ -33,7 +34,7 @@ router.get('/:mangaName/:chapterNo', (req, res) => {
 				pageFullUrl = rootUrl + pageUrl;
 				pageNumber = $(this).text();
 
-				let page = {
+				page = {
 					"pageNumber": pageNumber,
 					"pageUrl": pageUrl,
 					"pageFullUrl": pageFullUrl
@@ -42,13 +43,13 @@ router.get('/:mangaName/:chapterNo', (req, res) => {
 				pages.push(page);
 			});
 
-			let pageResults = {
+			pageResults = {
 				"chapterUrl": chapterUrl,
 				"pageCount": pages.length,
 				"pages": pages
 			};
 
-			res.send(JSON.stringify(pageResults));
+			res.json(pageResults);
 		});
 	}
 });

@@ -95,7 +95,7 @@ router.get('/', async (req, res) => {
                 "results": results
             };
 
-            res.send(JSON.stringify(searchResults));
+			res.json(searchResults);
         });
     }
 });

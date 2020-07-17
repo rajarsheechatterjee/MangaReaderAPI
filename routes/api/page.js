@@ -53,10 +53,10 @@ router.get('/:mangaName/:chapterNo/:pageNo', (req, res) => {
 				"pageImage": page
 			};
 
-			res.send(JSON.stringify(pageResults));
+			res.json(pageResults);
 		});
 	} else {
-		res.send('Invalid Url')
+		res.send('Invalid Url');
 	}
 });
 
