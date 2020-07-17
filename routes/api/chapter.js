@@ -5,7 +5,7 @@ const request = require('request');
 const router = express.Router();
 
 // @route  GET api/chapter
-// @desc   Test Route
+// @desc   Get a Chapter From a Manga
 // @access Public
 
 router.get('/', (req, res) => {

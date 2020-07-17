@@ -5,29 +5,29 @@ const request = require('request');
 const router = express.Router();
 
 // @route  GET api/page
-// @desc   Test Route
+// @desc   Get a Page From a Chapter
 // @access Public
 
 router.get('/', (req, res) => {
-    var rootUrl = 'http://www.mangareader.net/';
-    var pageUrl = req.query.p;
-    var url = rootUrl + pageUrl;
+    const rootUrl = 'http://www.mangareader.net/';
+    const pageUrl = req.query.p;
+    const url = rootUrl + pageUrl;
 
 	if (pageUrl) {
-	    request(url, function(err, resp, body) {
+	    request(url, (err, response, body) => {
 	        if (err)
 	            throw err;
 
 	        $ = cheerio.load(body);
 
-			var page = {};
+			let page = {};
 
 	        $('#imgholder').each(function(result) {
 				$(this).find('img').each(function() {
-					var imageWidth = null;
-					var imageHeight = null;
-					var imageSource = null;
-					var imageAlt = null;
+					let imageWidth = null;
+					let imageHeight = null;
+					let imageSource = null;
+					let imageAlt = null;
 
 					imageWidth = $(this).attr('width');
 					imageHeight = $(this).attr('height');
@@ -43,7 +43,7 @@ router.get('/', (req, res) => {
     			});
 	        });
 
-	        var pageResults = {
+	        pageResults = {
 	        	"pageUrl" : pageUrl,
 	        	"pageImage" : page
 	        };

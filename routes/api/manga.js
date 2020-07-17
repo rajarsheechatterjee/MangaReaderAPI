@@ -5,18 +5,18 @@ const request = require('request');
 const router = express.Router();
 
 // @route  GET api/manga
-// @desc   Gets all chapters for a manga
+// @desc   Gets all Chapters of a Manga
 // @access Public
 
 router.get('/', (req, res) => {
-    var rootUrl = 'http://www.mangareader.net/';
-	var mangaUrl = req.query.m;
-	url = rootUrl + mangaUrl;
+    const rootUrl = 'http://www.mangareader.net/';
+	const mangaUrl = req.query.m;
+	const url = rootUrl + mangaUrl;
 
 	if (mangaUrl) {
-        var chapters = [];
+        let chapters = [];
 
-	    request(url, function(err, resp, body) {
+	    request(url, (err, response, body) => {
 	        if (err)
 	            throw err;
 
@@ -24,11 +24,11 @@ router.get('/', (req, res) => {
 
 	        $('#listing tr').each(function(result) {
 	        	if ($(this).attr('class') != 'table_head') {
-		        	var chapterUrl = null;
-		        	var chapterFullUrl = null;
-		        	var chapterTitle = null;
-		        	var chapterDescription = null;
-		        	var chapterDate = null;
+		        	let chapterUrl = null;
+		        	let chapterFullUrl = null;
+		        	let chapterTitle = null;
+		        	let chapterDescription = null;
+		        	let chapterDate = null;
 
 					$(this).find('td').each(function() {
 						chapterDate = $(this).text();
@@ -39,7 +39,7 @@ router.get('/', (req, res) => {
 		    			});
 	    			});
 
-					var chapter = {
+					chapter = {
 	                    "chapterUrl": chapterUrl,
 	                    "chapterFullUrl" : chapterFullUrl,
 	                    "chapterTitle": chapterTitle,
@@ -51,7 +51,7 @@ router.get('/', (req, res) => {
 				} 
 	        });
 
-	        var chapterResults = {
+	        chapterResults = {
 	        	"mangaUrl" : mangaUrl,
 	        	"chapterCount" : chapters.length,
 	        	"chapters": chapters

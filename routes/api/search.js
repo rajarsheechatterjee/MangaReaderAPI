@@ -5,7 +5,7 @@ const request = require('request');
 const router = express.Router();
 
 // @route  GET api/search
-// @desc   Search a manga
+// @desc   Search a Manga
 // @access Public
 
 router.get('/', async (req, res) => {
@@ -69,7 +69,7 @@ router.get('/', async (req, res) => {
                 results.push(result);
             });
 
-            var pages = 0;
+            let pages = 0;
 
             $('#sp').each(function(result) {
                 $(this).find('a').each(function() {
@@ -88,7 +88,7 @@ router.get('/', async (req, res) => {
                 pages = (pages / itemsPerPage) + 1;
             }
 
-            var searchResults = {
+            searchResults = {
                 "searchTerm" : searchTerm,
                 "resultCount" : results.length,
                 "resultPageCount" : pages,
