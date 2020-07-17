@@ -2,7 +2,15 @@ const express = require('express');
 
 const app = express();
 
-app.get('/', (req,res) => res.send('API Running'))
+app.use(express.json({ extended: false }));
+
+app.get('/', (req, res) => res.send('API Running'));
+
+// Define Routes
+app.use('/api/manga', require('./routes/api/manga'));
+app.use('/api/page', require('./routes/api/page'));
+app.use('/api/search', require('./routes/api/search'));
+app.use('/api/chapter', require('./routes/api/chapter'));
 
 const PORT = process.env.PORT || 5000;
 
