@@ -8,57 +8,58 @@ const router = express.Router();
 // @desc   Gets all Chapters of a Manga
 // @access Public
 
-router.get('/', (req, res) => {
-    const rootUrl = 'http://www.mangareader.net/';
-	const mangaUrl = req.query.m;
-	const url = rootUrl + mangaUrl;
+router.get('/:mangaName', (req, res) => {
+	const rootUrl = 'http://www.mangareader.net/';
+	const mangaName = req.params.mangaName;
+	const url = rootUrl + mangaName;
 
-	if (mangaUrl) {
-        let chapters = [];
+	if(mangaName) {
+		
+		let chapters = [];
 
-	    request(url, (err, response, body) => {
-	        if (err)
-	            throw err;
+		request(url, (err, response, body) => {
+			if (err)
+				throw err;
 
-	        $ = cheerio.load(body);
+			$ = cheerio.load(body);
 
-	        $('#listing tr').each(function(result) {
-	        	if ($(this).attr('class') != 'table_head') {
-		        	let chapterUrl = null;
-		        	let chapterFullUrl = null;
-		        	let chapterTitle = null;
-		        	let chapterDescription = null;
-		        	let chapterDate = null;
+			$('#listing tr').each(function (result) {
+				if ($(this).attr('class') != 'table_head') {
+					let chapterUrl = null;
+					let chapterFullUrl = null;
+					let chapterTitle = null;
+					let chapterDescription = null;
+					let chapterDate = null;
 
-					$(this).find('td').each(function() {
+					$(this).find('td').each(function () {
 						chapterDate = $(this).text();
-						$(this).find('a').each(function() {
+						$(this).find('a').each(function () {
 							chapterUrl = $(this).attr('href');
 							chapterFullUrl = rootUrl + chapterUrl;
 							chapterTitle = $(this).text();
-		    			});
-	    			});
+						});
+					});
 
 					chapter = {
-	                    "chapterUrl": chapterUrl,
-	                    "chapterFullUrl" : chapterFullUrl,
-	                    "chapterTitle": chapterTitle,
-	                    "chapterDescription" : chapterDescription,
-	                    "chapterDate" : chapterDate
-	                };
+						"chapterUrl": chapterUrl,
+						"chapterFullUrl": chapterFullUrl,
+						"chapterTitle": chapterTitle,
+						"chapterDescription": chapterDescription,
+						"chapterDate": chapterDate
+					};
 
-	                chapters.push(chapter);
-				} 
-	        });
+					chapters.push(chapter);
+				}
+			});
 
-	        chapterResults = {
-	        	"mangaUrl" : mangaUrl,
-	        	"chapterCount" : chapters.length,
-	        	"chapters": chapters
-	        };
+			chapterResults = {
+				"mangaName": mangaName,
+				"chapterCount": chapters.length,
+				"chapters": chapters
+			};
 
-	        res.send(JSON.stringify(chapterResults));
-	    });		
+			res.send(JSON.stringify(chapterResults));
+		});
 	}
 });
 

@@ -8,47 +8,49 @@ const router = express.Router();
 // @desc   Get a Chapter From a Manga
 // @access Public
 
-router.get('/', (req, res) => {
-    const rootUrl = 'http://www.mangareader.net/';
-    const chapterUrl = req.query.c;
-    url = rootUrl + chapterUrl;
+router.get('/:mangaName/:chapterNo', (req, res) => {
+	const rootUrl = 'http://www.mangareader.net/';
+	const mangaName = req.params.mangaName;
+	const chapterNo = req.params.chapterNo;
+	const chapterUrl = mangaName + "/" + chapterNo;
+	const url = rootUrl + chapterUrl;
 
 	if (chapterUrl) {
-        let pages = [];
+		let pages = [];
 
-	    request(url, function(err, response, body) {
-            
-            if (err) throw err;
+		request(url, function (err, response, body) {
 
-	        $ = cheerio.load(body);
+			if (err) throw err;
 
-	        $('#pageMenu option').each(function(result) {
-	        	let pageNumber = null;
-	        	let pageUrl = null;
-	        	let pageFullUrl = null;
+			$ = cheerio.load(body);
 
-	        	pageUrl = $(this).attr('value');
-	        	pageFullUrl = rootUrl + pageUrl;
-	        	pageNumber = $(this).text();
+			$('#pageMenu option').each(function (result) {
+				let pageNumber = null;
+				let pageUrl = null;
+				let pageFullUrl = null;
+
+				pageUrl = $(this).attr('value');
+				pageFullUrl = rootUrl + pageUrl;
+				pageNumber = $(this).text();
 
 				let page = {
-                    "pageNumber": pageNumber,
-                    "pageUrl" : pageUrl,
-                    "pageFullUrl" : pageFullUrl
-                };
+					"pageNumber": pageNumber,
+					"pageUrl": pageUrl,
+					"pageFullUrl": pageFullUrl
+				};
 
-                pages.push(page);
-	        });
+				pages.push(page);
+			});
 
-	        let pageResults = {
-	        	"chapterUrl" : chapterUrl,
-	        	"pageCount" : pages.length,
-	        	"pages": pages
-	        };
+			let pageResults = {
+				"chapterUrl": chapterUrl,
+				"pageCount": pages.length,
+				"pages": pages
+			};
 
-	        res.send(JSON.stringify(pageResults));
-	    });		
+			res.send(JSON.stringify(pageResults));
+		});
 	}
 });
 
-module.exports = router; 
+module.exports = router;

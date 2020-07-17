@@ -8,22 +8,27 @@ const router = express.Router();
 // @desc   Get a Page From a Chapter
 // @access Public
 
-router.get('/', (req, res) => {
-    const rootUrl = 'http://www.mangareader.net/';
-    const pageUrl = req.query.p;
-    const url = rootUrl + pageUrl;
+router.get('/:mangaName/:chapterNo/:pageNo', (req, res) => {
+	const rootUrl = 'http://www.mangareader.net/';
+	const mangaName = req.params.mangaName;
+	const chapterNo = req.params.chapterNo;
+	const pageNo = req.params.pageNo;
+
+	const pageUrl = mangaName + "/" + chapterNo + "/" + pageNo;
+
+	const url = rootUrl + pageUrl;
 
 	if (pageUrl) {
-	    request(url, (err, response, body) => {
-	        if (err)
-	            throw err;
+		request(url, (err, response, body) => {
+			if (err)
+				throw err;
 
-	        $ = cheerio.load(body);
+			$ = cheerio.load(body);
 
 			let page = {};
 
-	        $('#imgholder').each(function(result) {
-				$(this).find('img').each(function() {
+			$('#imgholder').each(function (result) {
+				$(this).find('img').each(function () {
 					let imageWidth = null;
 					let imageHeight = null;
 					let imageSource = null;
@@ -35,21 +40,23 @@ router.get('/', (req, res) => {
 					imageAlt = $(this).attr('alt');
 
 					page = {
-	                    "imageWidth": imageWidth,
-	                    "imageHeight" : imageHeight,
-	                    "imageSource" : imageSource,
-	                    "imageAlt" : imageAlt
-	                };
-    			});
-	        });
+						"imageWidth": imageWidth,
+						"imageHeight": imageHeight,
+						"imageSource": imageSource,
+						"imageAlt": imageAlt
+					};
+				});
+			});
 
-	        pageResults = {
-	        	"pageUrl" : pageUrl,
-	        	"pageImage" : page
-	        };
+			pageResults = {
+				"pageUrl": pageUrl,
+				"pageImage": page
+			};
 
-	        res.send(JSON.stringify(pageResults));
-	    });		
+			res.send(JSON.stringify(pageResults));
+		});
+	} else {
+		res.send('Invalid Url')
 	}
 });
 
